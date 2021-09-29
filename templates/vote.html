@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+
+<title>Theta Chi Song Requests</title>
+
+</head>
+
+	<h1>ΘΧ Song Requests</h1>
+    <table>
+        <tr>
+            <th>Song</th>
+            <th>Upvotes</th>
+        </tr>
+        {% for name, upvotes in songList %}
+        <div class="ui segment">
+            <tr>
+                <td class="ui song name">{{name}}</td>
+                <td class="ui song count">{{upvotes}}</td>
+                <!-- <td><a class="ui delete button" href="/delete/{{name}}">Delete</a></td> -->
+                <td><a class="ui upvote button" href="/upvote/{{name}}">Upvote</a></td>
+                <td><a class="ui downvote button" href="/downvote/{{name}}">Downvote</a></td>
+            </tr>
+        </div>
+        {% endfor %}
+    </table>
+
+	<form class="ui form" action="/" method="post">
+		<div class="field">
+			<input type="text" name="song" placeholder="Enter Song Name..."><br>
+		</div>
+		<button class="ui blue button" type="submit">Add</button>
+	</form>
+
+</html>
