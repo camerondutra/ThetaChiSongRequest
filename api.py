@@ -1,50 +1,53 @@
+
 import flask
 import json
-from flask import request
+from flask import request, render_template, redirect, url_for
 
 app = flask.Flask(__name__)
 app.config['DEBUG'] = True
 
-songList = {'Apple': 1, 'Cameron': 2, 'BestSong': 3}
+SONGLIST = {'Apple': 1, 'Cameron': 2, 'BestSong': 3}
 
 @app.route('/', methods=['GET'])
 def getAll():
-    sortedSongs = sorted(songList.items(), key=lambda x: x[1], reverse=True)
-    return json.dumps(dict(sortedSongs), indent = 4)
+    sortedSongs = sorted(SONGLIST.items(), key=lambda x: x[1], reverse=True)
+    return render_template("vote.html", songList=sortedSongs)
 
 @app.route('/', methods=['POST'])
 def addSong():
-    songName = request.args.get('song')
-    songList[songName] = 1
-    return ('', 200)
-
-@app.route('/', methods=['DELETE'])
-def deleteAll():
-    songName = request.args.get('song')
-    if (songName):
-        songList.pop[songName]
+    songName = request.form.get('song')
+    duplicateName = duplicate(songName, SONGLIST)
+    if duplicateName:
+        SONGLIST[duplicateName] += 1
     else:
-        songList = {}
-    return ('', 200)
+        SONGLIST[songName] = 1
+    return redirect(url_for("getAll"))
 
-@app.route('/upvote/', methods=['PUT'])
-def upvote():
-    try:
-        songName = request.args.get('song')
-        if (songList[songName]):
-            songList[songName] = songList[songName] + 1
-    except Exception as e:
-        print('Can\'t find song')
-    return ('', 200)
+@app.route("/delete/<song>")
+def delete(song):
+    del SONGLIST[song]
+    return redirect(url_for("getAll"))
 
-@app.route('/downvote/', methods=['PUT'])
-def downvote():
-    try:
-        songName = request.args.get('song')
-        if (songList[songName]):
-            songList[songName] = songList[songName] - 1
-    except Exception as e:
-        print('Can\'t find song')
-    return ('', 200)
+@app.route('/upvote/<song>')
+def upvote(song):
+    duplicateName = duplicate(song, SONGLIST)
+    if duplicateName:
+        SONGLIST[duplicateName] += 1
+    return redirect(url_for("getAll"))
+
+@app.route('/downvote/<song>')
+def downvote(song):
+    duplicateName = duplicate(song, SONGLIST)
+    if duplicateName:
+        SONGLIST[duplicateName] -= 1
+        if (SONGLIST[duplicateName] < -5):
+            SONGLIST.pop(duplicateName)
+    return redirect(url_for("getAll"))
+
+def duplicate(song, songList):
+    for name in songList:
+        if (name.upper() == song.upper()):
+            return name
+    return None
 
 app.run()
