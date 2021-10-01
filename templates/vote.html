@@ -7,7 +7,8 @@
 
 </head>
 
-	<h1>ΘΧ Song Requests</h1>
+    <div style="background-image: url(/static/background.jpg);">
+	<img class="ui main image" border="0" alt="ncsuOX" src="/static/ncsuOX.png" width="250">
     <table>
         <tr>
             <th>Song</th>
@@ -19,8 +20,16 @@
                 <td class="ui song name">{{name}}</td>
                 <td class="ui song count">{{upvotes}}</td>
                 <!-- <td><a class="ui delete button" href="/delete/{{name}}">Delete</a></td> -->
-                <td><a class="ui upvote button" href="/upvote/{{name}}"><img alt="upvote" src="/images/Upvote.png"></a></td>
-                <td><a class="ui downvote button" href="/downvote/{{name}}"><img alt="downvote" src="/images/Downvote.png"></a></td>
+                <td>
+                    <a class="ui upvote button" href="/upvote/{{name}}">
+                        <img border="0" alt="upvote" src="/static/Upvote.png" width="25" height="25">
+                    </a>
+                </td>
+                <td>
+                    <a class="ui downvote button" href="/downvote/{{name}}">
+                        <img border="0" alt="upvote" src="/static/Downvote.png" width="25" height="25">
+                    </a>
+                </td>
             </tr>
         </div>
         {% endfor %}
